@@ -8,6 +8,7 @@ use Omniphx\Forrest\Authentications\OAuthJWT;
 use Omniphx\Forrest\Authentications\WebServer;
 use Omniphx\Forrest\Authentications\UserPassword;
 use Omniphx\Forrest\Authentications\UserPasswordSoap;
+use Omniphx\Forrest\Authentications\ClientCredentials;
 use Omniphx\Forrest\Providers\Laravel\LaravelEvent;
 use Omniphx\Forrest\Providers\Laravel\LaravelEncryptor;
 use Omniphx\Forrest\Providers\Laravel\LaravelInput;
@@ -77,7 +78,9 @@ abstract class BaseServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('forrest', function ($app) {
+        $bindingMethod = (config('forrest.singleton')) ? 'singleton' : 'scoped';
+
+        $this->app->{$bindingMethod}('forrest', function ($app) {
 
             // Config options
             $settings           = config('forrest');
@@ -104,6 +107,22 @@ abstract class BaseServiceProvider extends ServiceProvider
             switch ($authenticationType) {
                 case 'OAuthJWT':
                     $forrest = new OAuthJWT(
+                        $httpClient,
+                        $encryptor,
+                        $event,
+                        $input,
+                        $redirect,
+                        $instanceURLRepo,
+                        $refreshTokenRepo,
+                        $resourceRepo,
+                        $stateRepo,
+                        $tokenRepo,
+                        $versionRepo,
+                        $formatter,
+                        $settings);
+                    break;
+                case 'ClientCredentials':
+                    $forrest = new ClientCredentials(
                         $httpClient,
                         $encryptor,
                         $event,

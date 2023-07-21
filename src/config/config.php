@@ -5,15 +5,16 @@
  */
 return [
     /*
-     * Options include WebServer, UserPassword, UserPasswordSoap, and OAuthJWT
+     * Options include WebServer, UserPassword, UserPasswordSoap, ClientCredentials and OAuthJWT
      */
-    'authentication' => env('SF_AUTH_METHOD', 'WebServer'),
+    'authentication' => env('SF_AUTH_METHOD', 'ClientCredentials'),
 
     /*
      * Enter your credentials
      * Username and Password are only necessary for UserPassword & UserPasswordSoap flows.
      * Likewise, callbackURI is only necessary for WebServer flow.
      * OAuthJWT requires a key, username, and private key (SF_CONSUMER_SECRET)
+     * ClientCredentials requires a key and secret
      */
     'credentials'    => [
         //Required:
@@ -76,6 +77,8 @@ return [
      * Format looks like '32.0'
      */
     'version' => '',
+
+    'singleton' => true,
 
     /*
      * Optional (and not recommended) if you need to override the instance_url returned from Saleforce
